@@ -1,9 +1,6 @@
 package org.simonscode.telegrammenulibrary;
 
-import org.simonscode.telegrammenulibrary.CallbackAction;
-import org.simonscode.telegrammenulibrary.UpdateHook;
-import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
-import org.telegram.telegrambots.meta.bots.AbsSender;
+import org.simonscode.telegrammenulibrary.callbacks.CallbackAction;
 
 public class MenuButton {
     private final String buttonText;

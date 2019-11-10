@@ -1,10 +1,12 @@
-package org.simonscode.telegrammenulibrary;
+package org.simonscode.telegrammenulibrary.callbacks;
 
+import org.simonscode.telegrammenulibrary.Menu;
+import org.simonscode.telegrammenulibrary.callbacks.CallbackAction;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-public class GotoPageCallback implements CallbackAction{
+public class GotoPageCallback implements CallbackAction {
     private final Menu targetMenu;
 
     public GotoPageCallback(Menu targetMenu) {
