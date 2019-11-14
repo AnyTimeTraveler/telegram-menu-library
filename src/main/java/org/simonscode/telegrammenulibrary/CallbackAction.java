@@ -1,4 +1,4 @@
-package org.simonscode.telegrammenulibrary.callbacks;
+package org.simonscode.telegrammenulibrary;
 
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.bots.AbsSender;

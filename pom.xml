@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.simonscode</groupId>
-    <artifactId>telegrammenulibrary</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>telegram-menu-library</artifactId>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
     <name>Telegram Menu Library</name>
@@ -27,7 +27,7 @@
 
     <developers>
         <developer>
-            <email>simonstruck70@gmail.com</email>
+            <email>simon@simonscode.org</email>
             <name>Simon Struck</name>
             <url>https://simonscode.org</url>
             <id>AnyTimeTraveler</id>
@@ -146,7 +146,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -210,8 +210,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>11</source>
+                    <target>11</target>
                 </configuration>
             </plugin>
         </plugins>
@@ -237,12 +237,6 @@
             <groupId>org.telegram</groupId>
             <artifactId>telegrambots-meta</artifactId>
             <version>4.4.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>commons-codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.13</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
