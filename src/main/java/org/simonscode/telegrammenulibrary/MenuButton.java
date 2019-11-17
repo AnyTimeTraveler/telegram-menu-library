@@ -22,7 +22,7 @@ public class MenuButton {
     public InlineKeyboardButton generateInlineKeyboardButton() {
         InlineKeyboardButton inlineKeyboardButton = new InlineKeyboardButton(buttonText);
         if (action != null) {
-            inlineKeyboardButton.setCallbackData(UpdateHook.getCallbackData(action));
+            inlineKeyboardButton.setCallbackData(UpdateHook.register(action));
         } else if (callbackId != null) {
             inlineKeyboardButton.setCallbackData(callbackId);
         }
