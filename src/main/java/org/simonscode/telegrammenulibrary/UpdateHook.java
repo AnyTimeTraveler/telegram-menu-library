@@ -114,12 +114,15 @@ public class UpdateHook {
      * <p>
      * This will cause all menus to stop working, by clearing them all from memory.
      * So call this if you're short on memory.
+     * @return amount of callbacks removed
      */
-    public static void clearCallbacks() {
+    public static long clearCallbacks() {
         synchronized (ACTIONS_LOCK) {
+            long amount = actions.size();
             actions.clear();
             reverseActions.clear();
             actionLifetime.clear();
+            return amount;
         }
     }
 

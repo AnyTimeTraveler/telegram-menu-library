@@ -1,5 +1,7 @@
-
-import org.simonscode.telegrammenulibrary.*;
+import org.simonscode.telegrammenulibrary.GotoCallback;
+import org.simonscode.telegrammenulibrary.HorizontalMenu;
+import org.simonscode.telegrammenulibrary.SimpleMenu;
+import org.simonscode.telegrammenulibrary.VerticalMenu;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.bots.AbsSender;
@@ -43,7 +45,7 @@ public class CallbackTest {
 
         // Add callback destinations later, when the menu that you want to go to doesn't exist, yet.
         subMenuOneCallback.setTargetMenu(subMenuOne);
-        bot.execute(mainMenu.generateSendMessage().setChatId())
+//        bot.execute(mainMenu.generateSendMessage("CHAT-ID"))
     }
 
     private static void sendMessage(AbsSender bot, CallbackQuery callbackQuery) {

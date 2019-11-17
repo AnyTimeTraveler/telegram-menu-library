@@ -88,9 +88,11 @@ public class TemplateMenu {
     }
 
     /**
+     * Generates a SendMessage from this menu to send this menu into a telegram chat.
+     * The returned SendMessage object still requires a chatId before it can be sent off.
      *
-     * @return
-     * @throws Exception
+     * @return SendMessage that you can execute with your bot to send this menu into a telegram chat
+     * @throws Exception when the textGenerator throws an exception, while creating the menu text
      */
     public SendMessage generateSendMessage() throws Exception {
         return new SendMessage()
@@ -99,8 +101,10 @@ public class TemplateMenu {
     }
 
     /**
+     * Removes all buttons.
+     * Useful if you want to swap out buttons or load in another markup.
      *
-     * @return
+     * @return itself, for chaining
      */
     public TemplateMenu clearMarkup() {
         markup.clear();
@@ -108,17 +112,21 @@ public class TemplateMenu {
     }
 
     /**
+     * Returns the currently configured markup.
+     * Useful if you want to swap out another markup.
      *
-     * @return
+     * @return the current markup
      */
     public List<List<MenuButton>> getMarkup() {
         return markup;
     }
 
     /**
+     * Replaces the current markup.
+     * Useful if you want to swap out another markup.
      *
-     * @param markup
-     * @return
+     * @param markup markup to replace the current one
+     * @return itself, for chaining
      */
     public TemplateMenu setMarkup(List<List<MenuButton>> markup) {
         this.markup = markup;
