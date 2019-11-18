@@ -6,15 +6,17 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A simple menu that should make it as easy as possible use it.
  */
-public class SimpleMenu {
+public class SimpleMenu implements Menu {
 
     private String text;
-    private final List<List<MenuButton>> markup = new ArrayList<>();
+    private List<List<MenuButton>> markup = new ArrayList<>();
 
     /**
      * Creates a new SimpleMenu and sets the text shown in the menu.
@@ -49,17 +51,31 @@ public class SimpleMenu {
      * @param action     action to execute when the user clicks the button
      * @return itself for chaining
      */
-    public SimpleMenu addButton(String buttonText, CallbackAction action) {
+    public SimpleMenu addButton(String buttonText, Callback action) {
         if (markup.isEmpty()) {
             markup.add(new LinkedList<>());
         }
-        markup.get(markup.size() - 1).add(new MenuButton(buttonText, action));
+        markup.get(markup.size() - 1).add(new CallbackButton(buttonText, action));
+        return this;
+    }
+
+    /**
+     * Add a button to the menu in the current horizontal row.
+     *
+     * @param button button to be added
+     * @return itself for chaining
+     */
+    public SimpleMenu addButton(MenuButton button) {
+        if (markup.isEmpty()) {
+            markup.add(new LinkedList<>());
+        }
+        markup.get(markup.size() - 1).add(button);
         return this;
     }
 
     /**
      * Adds a new row to the button list.
-     * Following calls to addButton will put the button in the row below this.
+     * Following calls to {@link SimpleMenu#addButton(String, Callback)} will put the button in the row below this.
      *
      * @return itself for chaining
      */
@@ -69,7 +85,7 @@ public class SimpleMenu {
     }
 
     /**
-     * Generates an EditMessageText object that can be executed by the bot to edit a message and its buttons.
+     * Generates an {@link EditMessageText} object that can be executed by the bot to edit a message and its buttons.
      *
      * @param message message to edit
      * @return editmessage that you can execute with your bot to change the message to this menu
@@ -102,27 +118,68 @@ public class SimpleMenu {
         return new InlineKeyboardMarkup().setKeyboard(returnRows);
     }
 
+    /**
+     * Removes all buttons.
+     * Useful if you want to swap out buttons or load in another markup.
+     *
+     * @return itself, for chaining
+     */
+    public SimpleMenu clearMarkup() {
+        markup.clear();
+        return this;
+    }
 
     /**
-     * Generates a SendMessage from this menu to send this menu into a telegram chat.
+     * Returns the currently configured markup.
+     * Useful if you want to swap out another markup.
      *
-     * @param chatId destination of the generated SendMessage
-     * @return SendMessage that you can execute with your bot to send this menu into a telegram chat
+     * @return the current markup
+     */
+    public List<List<MenuButton>> getMarkup() {
+        return markup;
+    }
+
+    /**
+     * Replaces the current markup.
+     * Useful if you want to swap out another markup.
+     *
+     * @param markup markup to replace the current one
+     * @return itself, for chaining
+     */
+    public SimpleMenu setMarkup(List<List<MenuButton>> markup) {
+        this.markup = markup;
+        return this;
+    }
+
+    /**
+     * Generates a {@link SendMessage} from this menu to send this menu into a telegram chat.
+     *
+     * @param chatId destination of the generated {@link SendMessage}
+     * @return {@link SendMessage} that you can execute with your bot to send this menu into a telegram chat
      */
     public SendMessage generateSendMessage(Long chatId) {
         return generateSendMessage(String.valueOf(chatId));
     }
 
     /**
-     * Generates a SendMessage from this menu to send this menu into a telegram chat.
+     * Generates a {@link SendMessage} from this menu to send this menu into a telegram chat.
      *
-     * @param chatId destination of the generated SendMessage
-     * @return SendMessage that you can execute with your bot to send this menu into a telegram chat
+     * @param chatId destination of the generated {@link SendMessage}
+     * @return {@link SendMessage} that you can execute with your bot to send this menu into a telegram chat
      */
     public SendMessage generateSendMessage(String chatId) {
+        return generateSendMessage().setChatId(chatId);
+    }
+
+    /**
+     * Generates a {@link SendMessage} from this menu to send this menu into a telegram chat.
+     * The returned {@link SendMessage} object still requires a chatId before it can be sent off.
+     *
+     * @return {@link SendMessage} that you can execute with your bot to send this menu into a telegram chat
+     */
+    public SendMessage generateSendMessage() {
         return new SendMessage()
                 .setText(text)
-                .setReplyMarkup(generateMarkup(markup))
-                .setChatId(chatId);
+                .setReplyMarkup(generateMarkup(markup));
     }
 }

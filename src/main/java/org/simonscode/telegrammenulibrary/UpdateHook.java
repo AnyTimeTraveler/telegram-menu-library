@@ -6,7 +6,6 @@ import org.telegram.telegrambots.meta.bots.AbsSender;
 
 import java.nio.ByteBuffer;
 import java.time.Duration;
-import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,8 +13,8 @@ public class UpdateHook {
     private static long index = new Random().nextLong();
     private static long maxLifetime = 0;
     private static final Object ACTIONS_LOCK = new Object();
-    private static final HashMap<String, CallbackAction> actions = new HashMap<>();
-    private static final HashMap<CallbackAction, String> reverseActions = new HashMap<>();
+    private static final HashMap<String, Callback> actions = new HashMap<>();
+    private static final HashMap<Callback, String> reverseActions = new HashMap<>();
     private static final HashMap<String, Long> actionLifetime = new HashMap<>();
     private static Timer cleanupTimer = new Timer("cleanupTimer", true);
 
@@ -33,7 +32,7 @@ public class UpdateHook {
             String callbackId = callbackQuery.getData().substring(0, 12);
 
             synchronized (ACTIONS_LOCK) {
-                CallbackAction action = actions.get(callbackId);
+                Callback action = actions.get(callbackId);
                 if (action != null) {
                     action.execute(bot, callbackQuery);
                     return true;
@@ -51,7 +50,7 @@ public class UpdateHook {
      * @param id     the callback data you want to check against
      * @param action action to be called when an update with the callback id arrives
      */
-    public static void register(String id, CallbackAction action) {
+    public static void register(String id, Callback action) {
         synchronized (ACTIONS_LOCK) {
             actions.put(id, action);
             actionLifetime.put(id, System.currentTimeMillis());
@@ -68,7 +67,7 @@ public class UpdateHook {
      * @param action action to be called when an update with the correct callback id arrives
      * @return callbackId the callback id that your action was registered with, in case you want to do something with it
      */
-    public static String register(CallbackAction action) {
+    public static String register(Callback action) {
         synchronized (ACTIONS_LOCK) {
             if (reverseActions.containsKey(action)) {
                 return reverseActions.get(action);
@@ -88,7 +87,7 @@ public class UpdateHook {
      */
     public static void unregister(String id) {
         synchronized (ACTIONS_LOCK) {
-            CallbackAction removedAction = actions.remove(id);
+            Callback removedAction = actions.remove(id);
             actionLifetime.remove(id);
             reverseActions.remove(removedAction);
         }
@@ -99,7 +98,7 @@ public class UpdateHook {
      * <p>
      * This will remove a callback and free up its memory.
      */
-    public static void unregister(CallbackAction action) {
+    public static void unregister(Callback action) {
         synchronized (ACTIONS_LOCK) {
             String key = reverseActions.remove(action);
             if (key != null) {
@@ -114,6 +113,7 @@ public class UpdateHook {
      * <p>
      * This will cause all menus to stop working, by clearing them all from memory.
      * So call this if you're short on memory.
+     *
      * @return amount of callbacks removed
      */
     public static long clearCallbacks() {
@@ -160,18 +160,18 @@ public class UpdateHook {
      * If you want to save memory, this will start a task that will automatically remove menus of a certain age from the list.
      * This is recommended.
      *
-     * @param amount   the amount of the lifetime, measured in terms of the timeUnit
-     * @param timeUnit the unit that the lifetime is measured in, must have an exact duration, not null
+     * @param checkInterval the interval at which to check for callbacks, which are over the maxLifetime
+     * @param maxLifetime the maximum lifetime of any callback
      */
-    public static void setCleanupSchedule(long amount, ChronoUnit timeUnit) {
-        maxLifetime = Duration.of(amount, timeUnit).toMillis();
+    public static void setCleanupSchedule(Duration checkInterval, Duration maxLifetime) {
+        UpdateHook.maxLifetime = maxLifetime.toMillis();
         cleanupTimer.cancel();
         cleanupTimer = new Timer("cleanupTimer", true);
-        long cleanupInterval = Duration.of(10, ChronoUnit.MINUTES).toMillis();
+        long cleanupInterval = checkInterval.toMillis();
         cleanupTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                removeCallbacksOlderThan(maxLifetime);
+                removeCallbacksOlderThan(UpdateHook.maxLifetime);
             }
         }, cleanupInterval, cleanupInterval);
     }

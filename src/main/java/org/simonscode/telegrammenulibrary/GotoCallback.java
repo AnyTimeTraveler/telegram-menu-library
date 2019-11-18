@@ -7,8 +7,8 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.Objects;
 
-public class GotoCallback implements CallbackAction {
-    private SimpleMenu targetMenu;
+public class GotoCallback implements Callback {
+    private Menu targetMenu;
 
     public GotoCallback() {
     }
@@ -19,7 +19,7 @@ public class GotoCallback implements CallbackAction {
      *
      * @param targetMenu menu to jump to when executing this callback.
      */
-    public GotoCallback(SimpleMenu targetMenu) {
+    public GotoCallback(Menu targetMenu) {
         this.targetMenu = targetMenu;
     }
 

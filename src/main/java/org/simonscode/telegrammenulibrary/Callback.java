@@ -4,7 +4,7 @@ import org.telegram.telegrambots.meta.api.objects.CallbackQuery;
 import org.telegram.telegrambots.meta.bots.AbsSender;
 
 @FunctionalInterface
-public interface CallbackAction {
+public interface Callback {
     /**
      * This method is called when the user clicks the corresponding button in Telegram.
      *
