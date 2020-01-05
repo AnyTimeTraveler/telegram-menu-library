@@ -17,15 +17,7 @@ public class SimpleMenu implements Menu {
 
     private String text;
     private List<List<MenuButton>> markup = new ArrayList<>();
-
-    /**
-     * Creates a new SimpleMenu and sets the text shown in the menu.
-     *
-     * @param text text to show in the message of the menu
-     */
-    public SimpleMenu(String text) {
-        setText(text);
-    }
+    private ParseMode parseMode = ParseMode.PLAINTEXT;
 
     /**
      * Creates a new SimpleMenu.
@@ -43,6 +35,27 @@ public class SimpleMenu implements Menu {
         this.text = text;
         return this;
     }
+
+    /**
+     * Returns the currently configured parsemode.
+     *
+     * @return the current parsemode
+     */
+    public ParseMode getParseMode() {
+        return parseMode;
+    }
+
+    /**
+     * Set the parsemode of the menu.
+     *
+     * @param parseMode {@link ParseMode} of the menu
+     * @return itself for chaining
+     */
+    public SimpleMenu setParseMode(ParseMode parseMode) {
+        this.parseMode = parseMode;
+        return this;
+    }
+
 
     /**
      * Add a button to the menu in the current horizontal row.
@@ -95,7 +108,8 @@ public class SimpleMenu implements Menu {
                 .setMessageId(message.getMessageId())
                 .setChatId(message.getChatId())
                 .setText(text)
-                .setReplyMarkup(generateMarkup(markup));
+                .setReplyMarkup(generateMarkup(markup))
+                .setParseMode(parseMode.toString());
     }
 
     /**
@@ -158,7 +172,8 @@ public class SimpleMenu implements Menu {
      * @return {@link SendMessage} that you can execute with your bot to send this menu into a telegram chat
      */
     public SendMessage generateSendMessage(Long chatId) {
-        return generateSendMessage(String.valueOf(chatId));
+        return generateSendMessage(String.valueOf(chatId))
+                .setParseMode(parseMode.toString());
     }
 
     /**
@@ -168,7 +183,9 @@ public class SimpleMenu implements Menu {
      * @return {@link SendMessage} that you can execute with your bot to send this menu into a telegram chat
      */
     public SendMessage generateSendMessage(String chatId) {
-        return generateSendMessage().setChatId(chatId);
+        return generateSendMessage()
+                .setChatId(chatId)
+                .setParseMode(parseMode.toString());
     }
 
     /**
@@ -180,6 +197,7 @@ public class SimpleMenu implements Menu {
     public SendMessage generateSendMessage() {
         return new SendMessage()
                 .setText(text)
-                .setReplyMarkup(generateMarkup(markup));
+                .setReplyMarkup(generateMarkup(markup))
+                .setParseMode(parseMode.toString());
     }
 }
